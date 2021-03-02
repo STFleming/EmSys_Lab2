@@ -379,10 +379,7 @@ In `src/Question4/Question4.ino` you will find some code that is periodically pe
 
 ## Question 5: dotProduct exection time histogram with Timers
 
-We are going to repeat the same experiments as in Question 4, however this time we are going to add timers.:
-* Add a timer generating an interrupt every 10ms and plot an execution time histogram
-* Add a second timer generating an interrupt every 5ms and plot an execution time histogram
-* Add a third timer generating an interrupt every 2ms and plot an execution time histogram
+Use timer generated interrupts to see how bad you can make the execution time of ``dotProduct()`` vary. The aim is to try and get the highest variance posible.
 
 # Question 6: Modify the dotProduct code such that it will have more deterministic execution time in the presence of timer interrupts.
 
