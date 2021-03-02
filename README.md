@@ -161,7 +161,7 @@ In this CSV file each line has two variables, ``event ID``, ``64 bit timer count
 
 Design an experiment to measure the overhead of ``tracer.event()`` as accurately as you can. You should take multiple measurements and average them. Commit your experiment code and discuss your experiments and results in `lab2/README.md`. Comment on what you think the overheads are and how many cpu cycles the overheads are taking.
 
-## Question 2: what is the overhead of ``loop()``?
+## Question 2: what is the overhead of calling ``loop()``?
 
 Design an experiment to measure the overheads of the ``loop()`` call in the Arduino program as accurately as you can. You should take multiple measurements and average them. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
 
