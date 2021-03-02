@@ -373,14 +373,7 @@ And that's it. If configured correctly, our ISR will now be periodically executi
 
 Design an experiment using a hardware timer and interrupts to measure the interrupt latency of the TinyPico. You should use the let event tracer to try and calculate how long on average it takes to service and interrupt when the ISR is stored in the internal RAM of the ESP32. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
 
-## Question 4: what is the average interupt latency of the TinyPico when using Flash memory?
 
-Perform the same experiment as above, however, this time store your ISR code in Flash memory instead of the internal RAM. How has this effected the average interrupt latency? Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
-
-
-## Question 5: How does increasing the number of variables in your interrupt service routine increase the interrupt latency?
-
-Design an experiment where you increase the number of variables declared in your ISR from 1 to 20. Measure how this effects the average interrupt latency and plot of graph of hCommit your experiment code and discuss your experiments and results in `lab2/README.md`.ow it increases.
 
 
 ---------------------------------------------------------
