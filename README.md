@@ -157,11 +157,11 @@ To download the data, append ``.csv`` to your group name at the end of the URL y
 In this CSV file each line has two variables, ``event ID``, ``64 bit timer count``. This means that to get the _real_ time you have to multiple the count by ``1/(40*10^6)``.
 
 
-## Question 1: what are the overhead of calling ``tracer.event()``? 
+## Question 1: what is the overhead of calling ``tracer.event()``? 
 
 Design an experiment to measure the overhead of ``tracer.event()`` as accurately as you can. You should take multiple measurements and average them. Commit your experiment code and discuss your experiments and results in `lab2/README.md`. Comment on what you think the overheads are and how many cpu cycles the overheads are taking.
 
-## Question 2: what are the overhead of ``loop()``?
+## Question 2: what is the overhead of ``loop()``?
 
 Design an experiment to measure the overheads of the ``loop()`` call in the Arduino program as accurately as you can. You should take multiple measurements and average them. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
 
