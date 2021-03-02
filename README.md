@@ -146,8 +146,8 @@ As mentioned previously, the event tracer uses custom hardware timer peripherals
 
 ### Downloading RAW data
 
-The visual representation on the webpage is great for inspecting our signals and debugging; however, it probably is not very accurate if we want to perform detailed measurements. For that reason, you can download a comma-separated variable (`.csv`) file of the data for processing in the language or spreadsheet software of your choice.
-
+The visual representation on the webpage is great for an overview inspection of our events and debugging; however, it probably is not very useful if we want to perform detailed measurements or processing on our data. For that reason, you can download a comma-separated variable (`.csv`) file of the data for processing in the language or spreadsheet software of your choice. _(In your logbook repo feel free to include links to shared google sheets pages where you have the raw data contained)_.
+ 
 To download the data, append ``.csv`` to your group name at the end of the URL you visit to view the trace data. See the example in the gif below
 
 ![](imgs/raw_data_download.gif)
