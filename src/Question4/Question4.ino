@@ -1,7 +1,7 @@
 // Question4
 // author: stf
 
-#define SIZE 25 
+#define SIZE 6000 
 
 // Volatile keyword stops the compiler optimising
 // the arrays away
