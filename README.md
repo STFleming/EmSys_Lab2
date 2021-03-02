@@ -172,6 +172,8 @@ Design an experiment to measure the overheads of the ``loop()`` call in the Ardu
 
 [[mini video lecture]()]
 
+_page 123 of [[Making Embedded Systems](https://github.com/phuongtdv/PhuongTDVTesting/raw/master/Making.Embedded.Systems.pdf)] provides an excellent overview of interrupts_
+
 In this section of the lab, you will learn about hardware timers and interrupts. Interrupts force the CPU to respond rapidly to external events, like pressing a GPIO switch or internal events, such as an exception like a divide by zero.
     
 Imagine you have to boil and egg which takes 7 minutes. Which is more efficient, occasionally checking your watch to see if the time has elapsed? Or is it better to set up an alarm to alert you that your 7 minutes had passed?
@@ -216,4 +218,173 @@ void loop() {
 
 If our ``process()`` function call takes considerable time to compute, we might have an issue. This extra time will increase the latency that our microprocessor takes to respond to any change on GPIO 5. For some applications, this might be okay. Such as a multimedia entertainment system pause button, which can probably tolerate a few milliseconds of delay before processing. However, this can be safety-critical for other applications, for example, sensing a robotic arm's position in a factory automation setting.
 
-Interrupts provide a hardware mechanism for responding to changes within the microcontroller.
+Interrupts provide a hardware mechanism for responding to internal or external changes in the microcontroller.
+At a high level when an interrupt occurs the following happens:
+
+1. An interrupt request (IRQ) occurs
+2. The interrupt controller pauses the execution of the CPU
+3. The context of the CPU are saved
+4. A small function, specific for that interrupt is looked up and loaded onto the processor
+5. That small function is executed
+6. The context of the CPU is restored
+7. The CPU resumed from where it was interrupted
+
+Essentially when an interrupt occurs, the control flow of the program is diverted temporarily from it's current path to execute a _small_ specific function, known as an Interrupt Service Routine (ISR).
+
+![](imgs/isr_flow.svg)
+
+The hardware interrupt controller will have a fixed number of interrupts. We can think of these as channels connected to various peripherals and configured to generate interrupts under different conditions. If we look in the [[ESP32 TRM](https://www.espressif.com/sites/default/files/documentation/esp32_technical_reference_manual_en.pdf)] _page 35_ we can see a few more details about the ``Interrupt Matrix`` which is the interrupt controller for the ESP32. The TRM says that each of the two cores in the system has 32 interrupt sources, and there are a few extra for various exception handling, such as low-voltage detection.
+
+In the interrupt controller we can also specify how the interrupt should be triggered.
+
+![](imgs/state_change.svg)
+
+| Trigger | Info                                                                                    |
+|---------|-----------------------------------------------------------------------------------------|
+| LOW     | The interrupt is triggered while the signal is low                                      |
+| HIGH    | The interrupt is trigged while the signal is high                                       |
+| CHANGE  | The interrupt is triggered when the system is changing from low->high or from high->low |
+| RISING  | The interrupt is triggered when the system is changing from low->high                   |
+| FALLING | The interrupt is triggered when the system is changing from high->low                   |
+
+When an interrupt is triggered, the ISR location is looked up in a hardware Interrupt Vector Table. This table contains pointers to the ISR function's location that needs to be loaded onto the CPU. For more information on function pointers, checkout [[Making Embedded Systems](https://github.com/phuongtdv/PhuongTDVTesting/raw/master/Making.Embedded.Systems.pdf)] _page 66_.
+
+On the ESP32 an ISR is defined as follows:
+
+```C
+void IRAM_ATTR myIsr() {
+    // ISR body
+}
+```
+
+It is a function that returns nothing `void` return type and takes no arguments. There is also one other unusual part ``IRAM_ATTR``.
+This is a compiler attribute used to signal where we want this function to be stored. On the ESP32, instructions are generally stored in the Flash memory of the ESP32 device. Flash is slow, but we have lots of it. However, in the case of interrupts, we want it to be as fast as possible. Using this attribute, we are saying that instead of the Flash memory, we want to store our ISR code in the fast internal RAM of our ESP32. Keeping our ISR here provides low latency access to the code, reducing the overall interrupt latency. However, this also raises an important consideration when designing ISRs...
+
+__ISRs should be as short as possible__
+
+We don't have a lot of internal RAM, and large ISRs will consume a lot of it. It's also a bad practice to have long interrupts. They hold up the processor, and when they go wrong, debugging them can be incredibly difficult. It is generally better to keep ISRs as short as you possibly can.
+
+## Nested interrupts, disabling interrupts, and priority
+
+Interrupts can be nested inside one another, i.e. being interrupted by another interrupt during an ISR execution. Nested interrupts can sometimes be problematic and complicated. For instance, if we need to service an interrupt request in a fixed amount of time, there is a risk that another interrupt can jump in. This can make the execution time of the interrupt non-deterministic.
+
+Generally, it is good practice to disable other interrupts while inside an ISR. Disabling interrupts is usually a simple task. Most microcontrollers possess a single hardware register that, when written, can disable interrupts in the system. On the ESP32 in Arduino, we can use the following to temporarily disable interrupts:
+
+```C
+        noInterrupts();
+```
+
+And to re-enable them we can use:
+
+```C
+        interrupts();
+```
+
+Some interrupts are marked as Non-Maskable Interrupts (NMI); these are deemed so necessary that the hardware developers decided that they cannot be disabled. One notable example of this is the processor exceptions, such as low-voltage detection.                               
+
+Finally, interrupts can have priority over other interrupts, where a nested interruption can only occur if the interrupt is a higher priority than what is being interrupted. On some microcontrollers, this is configurable; however, on the ESP32, it is static, with different peripherals and interrupts having a fixed priority. See page 38 of the [[TRM](https://www.espressif.com/sites/default/files/documentation/esp32_technical_reference_manual_en.pdf)], where Table 10 shows the different priorities for the various interrupts.
+
+# Hardware Timers
+
+Unfortunately, we can't be in the lab to generate interrupts with the GPIO pins. However, we can still explore interrupts and generate them internally with the hardware timers in the ESP32.
+
+The ESP32 has four 64-bit timers that we can use to time operations or periodically generate interrupts. **Timer0 is reserved for the Let32-ESP tracebuffer module**; however, Timers1-3 are free to use.
+
+Each timer peripheral looks like the following:
+![](imgs/timer_hw.svg)
+
+The timer hardware is essentially composed of two components. A 16-bit prescaler divides the input clock, and a 64-bit counter counts every clock cycle of the prescaled clock. The timer also accepts an alarm input, a 64-bit value that triggers an interrupt when the counter hits the alarm value. The counter is configured to either stop after an alarm has triggered or reloaded back to zero.
+
+Luckily for us, there are some Arduino functions that we can use to configure the timer.
+
+First, create a pointer to the hardware timer.
+
+```C
+hw_timer_t *timer;
+```
+
+Then we can use the following function to initialise the timer and get a reference to it.
+
+```C
+timer = timerBegin(<timer number>, <timer prescale divider>, <count up or down>); 
+
+// for example
+timer = timerBegin(1, 80, true); 
+```
+
+The ``timerBegin()`` function for initialising the timer takes three arguments:
+
+1.The number of the timer 0-3 **(Remember timer 0 is reserved as it is in use by the Let-ESP32 library)** 
+2. The amount the input clock is divided by. In the above example, we have 80, which means that we are dividing the 80MHz input clock down to a 1MHz clock making our counter increment every 1us.
+3. Whether the counter counts up or down. In the above example, we have set this to ``true``, meaning we count up. 
+
+The next thing that we need to do is attach an interrupt to the timer and specify and ISR.
+
+```C
+timerAttachInterrupt(<pointer to our timer>, <pointer to our ISR> , <rising edge triggered>);
+
+// example
+void IRAM_ATTR timerISR() {
+        // ISR body
+}
+
+...
+
+timerAttachInterrupt(timer, &timerISR, true);
+
+```
+
+The ``timerAttachInterrupt()`` function takes three arguments:
+
+1. the pointer to the ``hw_timer_t`` that we defined previously and initialised with ``timerBegin()``. In the example above, this is ``timer``.
+2. A pointer to our ISR function. This function is executed when the timer interrupt occurs. In the example above, this is  ``timerISR``, the address of the function is passed using the ``&`` operator.
+3. A ``bool`` value to state whether the interrupt is edge-triggered or not. In the example above, the interrupt will be edge-triggered.
+
+The final two things that we need to do is tell the timer what it's alarm value is, i.e. the value that, when reached, triggers the interrupt; and enable the alarm on the timer. First, to write the alarm value into the timer, we can do:
+
+```C
+timerAlarm(<pointer to our timer>, <alarm value>, <generate alarm continuously>);
+
+// example
+timerAlarm(timer, 1000000, true);
+```
+
+The ``timerAlarm()`` function also takes three arguments to configure the point at which our timer module will generate an interrupt:
+
+1. A pointer to the ``hw_timer_t`` that we defined previously and initialised with ``timerBegin()``. In the example above, this is ``timer``.
+2. A 64-bit value that, when reached, will trigger the interrupt to occur. In the example, above this is `1000000`, with the prescaler value set to `80`, this will generate an interrupt every second. 
+3. A boolean to say whether or not the alarm will continuously happen. In the example above, this is set to true, meaning that the interrupt will be triggered and then the counter will start all over again. Setting this to ``false`` causes the interrupt only to get triggered once.
+
+Finally, we need to enable the timer alarm to do that we use the function:
+
+```C
+timerAlarmEnable(<pointer to our timer>);
+
+// example
+timerAlarmEnable(timer);
+```
+
+The ``timerAlarmEnable()`` just takes one argument, the pointer to the ``hw_timer_t`` that we defined previously and initialised with ``timerBegin()``. In the example above, this is ``timer``.
+
+
+And that's it. If configured correctly, our ISR will now be periodically executing every second.
+
+---------------------------------------------------------
+
+## Question 3: what is the average interrupt latency of the TinyPico? 
+
+Design an experiment using a hardware timer and interrupts to measure the interrupt latency of the TinyPico. You should use the let event tracer to try and calculate how long on average it takes to service and interrupt when the ISR is stored in the internal RAM of the ESP32. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
+
+## Question 4: what is the average interupt latency of the TinyPico when using Flash memory?
+
+Perform the same experiment as above, however, this time store your ISR code in Flash memory instead of the internal RAM. How has this effected the average interrupt latency? Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
+
+
+## Question 5: How does increasing the number of variables in your interrupt service routine increase the interrupt latency?
+
+Design an experiment where you increase the number of variables declared in your ISR from 1 to 20. Measure how this effects the average interrupt latency and plot of graph of hCommit your experiment code and discuss your experiments and results in `lab2/README.md`.ow it increases.
+
+
+## Question 6: Hardware timer setup from first principles.
+
+---------------------------------------------------------
