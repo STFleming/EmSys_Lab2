@@ -385,6 +385,4 @@ Perform the same experiment as above, however, this time store your ISR code in 
 Design an experiment where you increase the number of variables declared in your ISR from 1 to 20. Measure how this effects the average interrupt latency and plot of graph of hCommit your experiment code and discuss your experiments and results in `lab2/README.md`.ow it increases.
 
 
-## Question 6: Hardware timer setup from first principles.
-
 ---------------------------------------------------------
