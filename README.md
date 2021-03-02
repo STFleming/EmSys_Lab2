@@ -37,7 +37,7 @@ To use the library, include the following at the top of your program:
 #include "LetESP32.h"
 ```
 
-Instantiate a trace buffer with the following commands: ``ssid``, the ID of the wireless network in the lab; ``password``, the password for the wireless network in the lab; ``ws``, the WebSocket address and port for the WebSocket server in the lab; and finally ``dd_id``, the dotDevice ID for your group. All of the parameters, apart from the ``dd_id`` you can leave the same.
+To instantiate a trace buffer use ``LetESP32 tracer(ssid, password, ws, dd_id);``, where the arguments are: ``ssid``, the ID of the wireless network in the lab; ``password``, the password for the wireless network in the lab; ``ws``, the WebSocket address and port for the WebSocket server in the lab; and finally ``dd_id``, the dotDevice ID for your group. All of the parameters, apart from the ``dd_id`` you can leave the same.
 
 
 ```C
@@ -46,7 +46,7 @@ const char* password = "magicalfinch482";
 const char* ws = "ws://192.168.1.2:1234";
 const char* dd_id = "wibble00";
 
-LetESP32 tracer(ssid, password, ws, "wibble00");
+LetESP32 tracer(ssid, password, ws, dd_id);
 ```
 
 This command creates ``tracer`` our tracebuffer that we will use to measure the specific event timings in our system.
@@ -82,7 +82,7 @@ const char* password = "magicalfinch482";
 const char* ws = "ws://192.168.1.2:1234";
 const char* dd_id = "wibble00";
 
-LetESP32 tracer(ssid, password, ws, "wibble00");
+LetESP32 tracer(ssid, password, ws, dd_id);
 
 void setup() {
    tracer.connect();
