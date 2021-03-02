@@ -156,6 +156,7 @@ To download the data, append ``.csv`` to your group name at the end of the URL y
 
 In this CSV file each line has two variables, ``event ID``, ``64 bit timer count``. This means that to get the _real_ time you have to multiple the count by ``1/(40*10^6)``.
 
+---------------------------------------------------------
 
 ## Question 1: what is the overhead of calling ``tracer.event()``? 
 
@@ -165,5 +166,54 @@ Design an experiment to measure the overhead of ``tracer.event()`` as accurately
 
 Design an experiment to measure the overheads of the ``loop()`` call in the Arduino program as accurately as you can. You should take multiple measurements and average them. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
 
+---------------------------------------------------------
 
+# Hardware Timers and Interrupts
 
+[[mini video lecture]()]
+
+In this section of the lab, you will learn about hardware timers and interrupts. Interrupts force the CPU to respond rapidly to external events, like pressing a GPIO switch or internal events, such as an exception like a divide by zero.
+    
+Imagine you have to boil and egg which takes 7 minutes. Which is more efficient, occasionally checking your watch to see if the time has elapsed? Or is it better to set up an alarm to alert you that your 7 minutes had passed?
+
+The same dilemma exists for embedded systems. Say we have the following setup:    
+
+![](imgs/switch.svg)
+
+How can we respond to the switch event as fast as possible? One possible way to detect a change on the switch is to write some code like this:
+
+```C
+void setup() {
+    pinMode(5, INPUT);
+}
+
+bool pinState;
+bool tmp;
+
+void loop() {
+   tmp = digitalRead(5); 
+   if(tmp != pinState) {
+       // the pin has changed state
+       pinState = tmp; 
+   }
+}
+```
+
+In the above code, the microcontroller spins around the ``loop()`` body, periodically checking the state of our GPIO pin (5) to see if it has changed from the previous state. Regularly checking a pin like this is a technique called __polling__.
+
+With the code above, we probably can pick up changes on GPIO 5 quite quickly. However, the issue comes when our Microprocessor has to do more than just spin in this loop. Consider the following:
+
+```C
+void loop() {
+   tmp = digitalRead(5); 
+   if(tmp != pinState) {
+       // the pin has changed state
+       pinState = tmp; 
+       process();
+   }
+}
+```
+
+If our ``process()`` function call takes considerable time to compute, we might have an issue. This extra time will increase the latency that our microprocessor takes to respond to any change on GPIO 5. For some applications, this might be okay. Such as a multimedia entertainment system pause button, which can probably tolerate a few milliseconds of delay before processing. However, this can be safety-critical for other applications, for example, sensing a robotic arm's position in a factory automation setting.
+
+Interrupts provide a hardware mechanism for responding to changes within the microcontroller.
