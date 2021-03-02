@@ -27,6 +27,5 @@ void setup() {
 }
 
 void loop() {
-  randomise();
   dotProduct();
 }
