@@ -1,16 +1,14 @@
-# EmSys Lab 2: Timers, Interrupts, and FreeRTOS
+# EmSys Lab 2: Timers and Interrupts
 
 We will be using a lightweight measurement library (let-esp32) that I have developed to instrument our TinyPico devices for this lab. In your groups, you will use the let-esp32 to perform experiments to answer questions about TinyPico; you will also learn about the following:
 
 * Configuring hardware timers
 * Interrupts
-* FreeRTOS
 
-There are three videos associated with this lab:
+There are two videos associated with this lab:
 
 * [[Measuring events on the TinyPico with let-esp32](www.youtube.com)] __not yet published__
 * [[Configuring Hardware Timers and Interrupts](www.youtube.com)] __not yet published__
-* [[FreeRTOS](www.youtube.com)] __not yet published__
 
 # Logbook structure
 
