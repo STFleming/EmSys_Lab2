@@ -349,10 +349,10 @@ The ``timerAttachInterrupt()`` function takes three arguments:
 The final two things that we need to do is tell the timer what it's alarm value is, i.e. the value that, when reached, triggers the interrupt; and enable the alarm on the timer. First, to write the alarm value into the timer, we can do:
 
 ```C
-timerAlarm(<pointer to our timer>, <alarm value>, <generate alarm continuously>);
+timerAlarmWrite(<pointer to our timer>, <alarm value>, <generate alarm continuously>);
 
 // example
-timerAlarm(timer, 1000000, true);
+timerAlarmWrite(timer, 1000000, true);
 ```
 
 The ``timerAlarm()`` function also takes three arguments to configure the point at which our timer module will generate an interrupt:
