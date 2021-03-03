@@ -28,5 +28,5 @@ void setup() {
 
 void loop() {
   dotProduct();
-  delayMicroseconds(500);
+  delayMicroseconds(750);
 }
