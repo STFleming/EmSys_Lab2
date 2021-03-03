@@ -381,7 +381,7 @@ And that's it. If configured correctly, our ISR will now be periodically executi
 
 Design an experiment using a hardware timer and interrupts to measure the interrupt latency of the TinyPico. You should use the let event tracer to try and calculate how long on average it takes to service and interrupt when the ISR is stored in the internal RAM of the ESP32. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
 
-##Question 4: dotProduct execution time histogram
+## Question 4: dotProduct execution time histogram
 
 In `src/Question4/Question4.ino` you will find some code that is periodically performing a [dot product](https://en.wikipedia.org/wiki/Dot_product) computation on two randomised arrays. Use the LetESP32 to profile the execution time of this, and to build a histogram of the execution times to see the execution time of ``dotProduct()`` varies. You should just time the execution of the ``dotProduct()`` function in the ``loop()`` and not the randomise function.  
 
@@ -393,7 +393,7 @@ Use timer generated interrupts to see how bad you can make the execution time of
 * Attempt to vary the frequency at which they interrupt 
 * Change the amount of work that each interrupt is doing in their ISRs
 
-# Question 6: More deterministic `dotProduct()` 
+## Question 6: More deterministic `dotProduct()` 
 
 Modify the body of the ``dotProduct()`` function so that it will have more deterministic execution time in the presence of timer interrupts oyu introduces in Question 5. Document and evaluate your changes. 
 
