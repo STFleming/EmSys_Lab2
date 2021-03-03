@@ -7,7 +7,7 @@ We will be using a lightweight measurement library (let-esp32) that I have devel
 
 There are two videos associated with this lab:
 
-* [[Measuring events on the TinyPico with let-esp32](www.youtube.com)] __not yet published__
+* [[Measuring events on the TinyPico with let-esp32](https://youtu.be/UkjcmOvF6Mw)] 
 * [[Configuring Hardware Timers and Interrupts](www.youtube.com)] __not yet published__
 
 # Logbook structure
