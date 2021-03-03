@@ -269,13 +269,21 @@ Interrupts can be nested inside one another, i.e. being interrupted by another i
 Generally, it is good practice to disable other interrupts while inside an ISR. Disabling interrupts is usually a simple task. Most microcontrollers possess a single hardware register that, when written, can disable interrupts in the system. On the ESP32 in Arduino, we can use the following to temporarily disable interrupts:
 
 ```C
-        noInterrupts();
+        noInterrupts(); // I have been having difficulty with this
+
+        // This seems to work
+        portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+        portENTER_CRITICAL(&mux);
 ```
 
 And to re-enable them we can use:
 
 ```C
-        interrupts();
+        interrupts(); // I have been having difficulty with this
+
+        // This seems to work to reenable interrupts
+        portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
+        portEXIT_CRITICAL(&mux);
 ```
 
 Some interrupts are marked as Non-Maskable Interrupts (NMI); these are deemed so necessary that the hardware developers decided that they cannot be disabled. One notable example of this is the processor exceptions, such as low-voltage detection.                               
@@ -381,6 +389,12 @@ In `src/Question4/Question4.ino` you will find some code that is periodically pe
 
 Use timer generated interrupts to see how bad you can make the execution time of ``dotProduct()`` vary. The aim is to try and get the highest variance posible.
 
-# Question 6: Modify the dotProduct code such that it will have more deterministic execution time in the presence of timer interrupts.
+* I would try adding between 1 and 3 timers
+* Attempt to vary the frequency at which they interrupt 
+* Change the amount of work that each interrupt is doing in their ISRs
+
+# Question 6: More deterministic `dotProduct()` 
+
+Modify the body of the ``dotProduct()`` function so that it will have more deterministic execution time in the presence of timer interrupts oyu introduces in Question 5. Document and evaluate your changes. 
 
 ---------------------------------------------------------
