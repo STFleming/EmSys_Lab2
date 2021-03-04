@@ -8,7 +8,7 @@ We will be using a lightweight measurement library (let-esp32) that I have devel
 There are two videos associated with this lab:
 
 * [[Measuring events on the TinyPico with let-esp32](https://youtu.be/UkjcmOvF6Mw)] 
-* [[Configuring Hardware Timers and Interrupts](www.youtube.com)] __not yet published__
+* [[Configuring Hardware Timers and Interrupts](https://youtu.be/OHArGGwXDtI)] 
 
 # Logbook structure
 
@@ -168,7 +168,7 @@ Design an experiment to measure the overheads of the ``loop()`` call in the Ardu
 
 # Hardware Timers and Interrupts
 
-[[mini video lecture]()]
+[[mini video lecture](https://youtu.be/OHArGGwXDtI)]
 
 _page 123 of [[Making Embedded Systems](https://github.com/phuongtdv/PhuongTDVTesting/raw/master/Making.Embedded.Systems.pdf)] provides an excellent overview of interrupts_
 
