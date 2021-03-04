@@ -221,7 +221,7 @@ At a high level when an interrupt occurs the following happens:
 
 1. An interrupt request (IRQ) occurs
 2. The interrupt controller pauses the execution of the CPU
-3. The context of the CPU are saved
+3. The context of the CPU is saved
 4. A small function, specific for that interrupt is looked up and loaded onto the processor
 5. That small function is executed
 6. The context of the CPU is restored
