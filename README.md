@@ -384,18 +384,19 @@ And that's it. If configured correctly, our ISR will now be periodically executi
 
 ## Question 4: dotProduct execution time histogram
 
-In `src/Question4/Question4.ino` you will find some code that is periodically performing a [dot product](https://en.wikipedia.org/wiki/Dot_product) computation on two randomised arrays. Use the LetESP32 to profile the execution time of this, and to build a histogram of the execution times to see the execution time of ``dotProduct()`` varies. You should just time the execution of the ``dotProduct()`` function in the ``loop()`` and not the randomise function.  
+In `src/Question4/Question4.ino` you will find some code that is periodically performing a [dot product](https://en.wikipedia.org/wiki/Dot_product) computation on two randomised arrays. Use the LetESP32 to profile the execution time of the ``dotProduct()`` function. You should construct a histogram of the execution times to see the execution time of ``dotProduct()`` varies. You should just time the execution of the ``dotProduct()`` function in the ``loop()`` and not the randomise function or the ``delayMicroseconds()`` function.  
 
 ## Question 5: dotProduct exection time histogram with Timers
 
-Use timer generated interrupts to see how bad you can make the execution time of ``dotProduct()`` vary. The aim is to try and get the highest variance posible.
+Use timer generated interrupts to see how much you can make the execution time of ``dotProduct()`` vary. The aim is to try and get the highest variance posible.
 
 * I would try adding between 1 and 3 timers
 * Attempt to vary the frequency at which they interrupt 
 * Change the amount of work that each interrupt is doing in their ISRs
+* Be careful, if you generate interrupts too frequently you can starve the processor (i.e. it always executing just ISRs) and your TinyPico can start behaving strangely, such as constantly restarting.
 
 ## Question 6: More deterministic `dotProduct()` 
 
-Modify the body of the ``dotProduct()`` function so that it will have more deterministic execution time in the presence of timer interrupts oyu introduces in Question 5. Document and evaluate your changes. 
+Modify the body of the ``dotProduct()`` function so that it will have more deterministic execution time in the presence of timer interrupts you introduces in Question 5. Document and evaluate your changes. 
 
 ---------------------------------------------------------
