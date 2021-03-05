@@ -377,9 +377,10 @@ And that's it. If configured correctly, our ISR will now be periodically executi
 
 ---------------------------------------------------------
 
-## Question 3: what is the average interrupt latency of the TinyPico? 
+## ~~Question 3: what is the average interrupt latency of the TinyPico?~~ 
 
-Design an experiment using a hardware timer and interrupts to measure the interrupt latency of the TinyPico. You should use the let event tracer to try and calculate how long on average it takes to service and interrupt when the ISR is stored in the internal RAM of the ESP32. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.
+~~Design an experiment using a hardware timer and interrupts to measure the interrupt latency of the TinyPico. You should use the let event tracer to try and calculate how long on average it takes to service and interrupt when the ISR is stored in the internal RAM of the ESP32. Commit your experiment code and discuss your experiments and results in `lab2/README.md`.~~
+
 
 ## Question 4: dotProduct execution time histogram
 
