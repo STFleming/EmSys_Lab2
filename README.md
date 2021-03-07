@@ -388,12 +388,12 @@ In `src/Question4/Question4.ino` you will find some code that is periodically pe
 
 ## Question 5: dotProduct exection time histogram with Timers
 
-Use timer generated interrupts to see how much you can make the execution time of ``dotProduct()`` vary. The aim is to try and get the highest variance posible.
+Use timer generated interrupts to see how much you can make the execution time of ``dotProduct()`` vary. The aim is to try and measure a __measureable variance in execution time__ (>= 1% increase in max execution time).
 
 * I would try adding between 1 and 3 timers
 * Attempt to vary the frequency at which they interrupt 
 * Change the amount of work that each interrupt is doing in their ISRs
-* Be careful, if you generate interrupts too frequently you can starve the processor (i.e. it always executing just ISRs) and your TinyPico can start behaving strangely, such as constantly restarting.
+* Be careful, if you generate interrupts too frequently you can starve the processor (i.e. it always executing just ISRs) and your TinyPico can start behaving strangely, such as constantly restarting.  
 
 ## Question 6: More deterministic `dotProduct()` 
 
