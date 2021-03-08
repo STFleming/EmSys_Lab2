@@ -397,6 +397,11 @@ Use timer generated interrupts to see how much you can make the execution time o
 
 ## Question 6: More deterministic `dotProduct()` 
 
-Modify the body of the ``dotProduct()`` function so that it will have more deterministic execution time in the presence of timer interrupts you introduces in Question 5. Document and evaluate your changes. 
+Modify the body of the ``dotProduct()`` function so that the variance in execution time is reduced in the presence of the timer interrupts you introduces in Question 5. Document and evaluate your changes. 
+
+Hints:
+* You __only__ need to add code to the body of ``dotProduct()`` 
+* The overall execution time of the ``dotProduct()`` function may increase
+* You should see a reduction in the variation of execution time, but may not be able to get it down to the same levels as Question 4
 
 ---------------------------------------------------------
