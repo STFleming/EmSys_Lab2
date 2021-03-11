@@ -395,13 +395,13 @@ Use timer generated interrupts to see how much you can make the execution time o
 * Change the amount of work that each interrupt is doing in their ISRs
 * Be careful, if you generate interrupts too frequently you can starve the processor (i.e. it always executing just ISRs) and your TinyPico can start behaving strangely, such as constantly restarting.  
 
-## Question 6: More deterministic `dotProduct()` 
+## ~~Question 6: More deterministic `dotProduct()`~~ 
 
-Modify the body of the ``dotProduct()`` function so that the variance in execution time is reduced in the presence of the timer interrupts you introduces in Question 5. Document and evaluate your changes. 
+~~Modify the body of the ``dotProduct()`` function so that the variance in execution time is reduced in the presence of the timer interrupts you introduces in Question 5. Document and evaluate your changes.~~
 
-Hints:
-* You __only__ need to add code to the body of ``dotProduct()`` 
-* The overall execution time of the ``dotProduct()`` function may increase
-* You should see a reduction in the variation of execution time, but may not be able to get it down to the same levels as Question 4
+~~Hints:~~
+* ~~You __only__ need to add code to the body of ``dotProduct()``~~ 
+* ~~The overall execution time of the ``dotProduct()`` function may increase~~
+* ~~You should see a reduction in the variation of execution time, but may not be able to get it down to the same levels as Question 4~~
 
 ---------------------------------------------------------
