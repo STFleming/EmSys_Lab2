@@ -27,10 +27,11 @@ struct event_t {
 #pragma pack(1)
 struct buffer_t {
         char ident[8]; // dotDevice identifiers are 8 chars -- 64bits
-        uint32_t padding;
+        uint32_t cmd;
         event_t buff[LETESP32_BUFF_DEPTH];
 };
 #pragma pop(1)
+
 
 // display callback event from websocket connection
 void letesp32_onEventsCallback(WebsocketsEvent event, String data) {
@@ -134,6 +135,25 @@ class LetESP32
 	                flushLET();		
 	    }
 
+        void sendJSON(String &str) {
+            // block til we can send
+            while(_time_last_transfer + _rate_limit > millis()) { }
+            _client.send(str);
+            _time_last_transfer = millis();
+        }
+
+        void sendJSON(char* str) {
+            while(_time_last_transfer + _rate_limit > millis()) { }
+            _client.send(str);
+            _time_last_transfer = millis();
+        }
+
+        void sendBIN(char *t) {
+            while(_time_last_transfer + _rate_limit > millis()) { }
+            _client.sendBinary(t, 76);
+            _time_last_transfer = millis();
+        }
+
 	    void flushLET() {
 	        _bufpos = 0;	
             if(_time_last_pulse + _rate_limit < millis()) {
@@ -151,6 +171,7 @@ class LetESP32
        buffer_t _trace;
 	   WebsocketsClient _client;
        unsigned long _time_last_pulse;
+       unsigned long _time_last_transfer;
        const unsigned long _rate_limit = 2000; // need to wait at least 2 seconds between flushes
 
  	   // Timer hardware registers
